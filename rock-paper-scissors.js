@@ -117,40 +117,32 @@ const resultDiv = document.querySelector(".result")
 const btns = document.querySelector(".btns")
 btns.addEventListener("click", (e) => {
   const target = e.target;
-  // console.log(target)
-  let winner = "";
-  switch (target.id) {
-    case "scissors":
-      winner = playRound("scissors", getComputerChoice());
-      break;
-    case "rock":
-      winner = playRound("rock", getComputerChoice());
-      break;
-    case "paper":
-      winner = playRound("paper", getComputerChoice());
-      break;
-  }
+  const humanChoice = target.id
+  const computerChoice = getComputerChoice()
+  const winner = playRound(computerChoice, humanChoice);
+
   if (winner === DRAW) {
     alert(
       `DRAW!!
-      Score: hum: ${humanScore} vs com: ${computerScore}`
+      human: ${humanChoice}, computer: ${computerChoice}
+      Score: ${humanScore} vs ${computerScore}`
     );
   } else if (winner === HUMAN_WIN || winner === COM_WIN) {
     whoGotScore(winner);
     alert(
-      `The winner is ${capitalize(winner)}.\
-      Score: hum: ${humanScore} vs com: ${computerScore}`
+      `The winner is ${capitalize(winner)}.
+      human: ${humanChoice}, computer: ${computerChoice}
+      Score: ${humanScore} vs ${computerScore}`
     );
   };
+
   if (humanScore === WIN_SCORE || computerScore === WIN_SCORE) {
     const finalWinner = gameOver(computerScore, humanScore);
     const para = document.createElement("p");
+    const removes = document.querySelector(".btns")
+
     para.textContent = `Final winner is ${capitalize(finalWinner)}`;
     resultDiv.appendChild(para);
-    
-    const removes = document.querySelector(".btns")
     removes.remove()
-    
-
   };
 });
