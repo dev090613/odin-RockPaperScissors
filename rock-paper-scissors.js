@@ -1,14 +1,57 @@
-const HUMAN_WIN = "human win";
-const COM_WIN = "computer win";
+const HUMAN_WIN = "human";
+const COM_WIN = "computer";
 const DRAW = "draw";
+const WIN_SCORE = 3;
 
 let humanScore = 0;
 let computerScore = 0;
-let computerChoice = '';
-let humanChoice = '';
 
-function sayResult(result) {
-  switch (result) {
+function playRound(computerChoice, humanChoice) {
+  // Return whoWin
+  let whoWin = "";
+  if (computerChoice === 'rock') {
+    switch (humanChoice) {
+      case "rock":
+        whoWin = DRAW;
+        break;
+      case "paper":
+        whoWin = HUMAN_WIN;
+        break;
+      case "scissors":
+        whoWin = COM_WIN;
+        break;
+    }
+  } else if (computerChoice === 'paper') {
+    switch (humanChoice) {
+      case "rock":
+        whoWin = COM_WIN;
+        break;
+      case "paper":
+        whoWin = DRAW;
+        break;
+      case "scissors":
+        whoWin = HUMAN_WIN;
+        break;
+    }
+  } else {
+    switch (humanChoice) {
+      case "rock":
+        whoWin = HUMAN_WIN;
+        break;
+      case "paper":
+        whoWin = COM_WIN;
+        break;
+      case "scissors":
+        whoWin = DRAW;
+        break;
+    }
+  }
+  // sayResult(result, computerChoice, humanChoice)
+  return whoWin; // HUMAN_WIN, COMWIN, DRAW;
+}
+
+function sayResult(whoWin, computerChoice, humanChoice) {
+  switch (whoWin) {
     case COM_WIN:
       console.log(`You lose! ${capitalize(computerChoice)} beats ${capitalize(humanChoice)}`)
       break;
@@ -22,7 +65,7 @@ function sayResult(result) {
 }
 
 function capitalize(string) {
-  return string.at().toUpperCase() + string.slice(1,)
+  return string.at(0).toUpperCase() + string.slice(1,)
 }
 
 function getRandomInt(min, max) {
@@ -31,9 +74,14 @@ function getRandomInt(min, max) {
   return Math.floor( Math.random() * ( max - min + 1 ) + min )
 }
 
-function getComputerChoice() {
+function getHumanChoice() {
+  return prompt("Rock, Paper, Scissors?")
+        .toLowerCase()
+}
 
+function getComputerChoice() {
   const randomInt = getRandomInt(1, 3);
+  let computerChoice = ""
   
   if (randomInt === 1) {
     computerChoice = "rock";
@@ -45,73 +93,64 @@ function getComputerChoice() {
   return computerChoice;
 };
 
-function getHumanChoice() {
-  humanChoice = prompt("Rock, Paper, Sscissors?")
-                      .toLowerCase()
-  return humanChoice;
-}
-
-function playRound(computerChoice, humanChoice) {
-  // "You lose! Paper beats Rock"
-  let result = "";
-  if (computerChoice === 'rock') {
-    switch (humanChoice) {
-      case "rock":
-        result = DRAW;
-        break;
-      case "paper":
-        result = HUMAN_WIN;
-        humanScore++;
-        break;
-      case "scissors":
-        result = COM_WIN;
-        computerScore++;
-        break;
+function gameOver(computerScore, humanScore) {
+  let finalWinner = ""
+  if (computerScore > humanScore) {
+      finalWinner = "Computer"
+    } else if (humanScore > computerScore) {
+      finalWinner = "Human"
     }
-  } else if (computerChoice === 'paper') {
-    switch (humanChoice) {
-      case "rock":
-        result = COM_WIN;
-        computerScore++;
-        break;
-      case "paper":
-        result = DRAW;
-        break;
-      case "scissors":
-        result = HUMAN_WIN;
-        humanScore++;
-        break;
-    }
-  } else {
-    switch (humanChoice) {
-      case "rock":
-        result = HUMAN_WIN;
-        humanScore++;
-        break;
-      case "paper":
-        result = COM_WIN;
-        computerScore++;
-        break;
-      case "scissors":
-        result = DRAW;
-        break;
-    }
+  // console.log(`The Winner is ${winner}`)
+  return finalWinner;
   }
 
-  sayResult(result)
-  return [ computerScore, humanScore ];
+function whoGotScore(winner) {
+  if (winner === HUMAN_WIN) {
+    humanScore++;
+  } else if (winner === COM_WIN) {
+    computerScore++;
+  }
+  return ;
 }
 
-function playGame(round) {
-  i = 0;
-  while (i < round) {
-    [ computerScore, humanScore ] 
-      = playRound(getComputerChoice(), getHumanChoice())
-    console.log(
-      `com: ${computerScore}, hum: ${humanScore}`
+const resultDiv = document.querySelector(".result")
+const btns = document.querySelector(".btns")
+btns.addEventListener("click", (e) => {
+  const target = e.target;
+  // console.log(target)
+  let winner = "";
+  switch (target.id) {
+    case "scissors":
+      winner = playRound("scissors", getComputerChoice());
+      break;
+    case "rock":
+      winner = playRound("rock", getComputerChoice());
+      break;
+    case "paper":
+      winner = playRound("paper", getComputerChoice());
+      break;
+  }
+  if (winner === DRAW) {
+    alert(
+      `DRAW!!
+      Score: hum: ${humanScore} vs com: ${computerScore}`
     );
-    i++;
-  }
-}
+  } else if (winner === HUMAN_WIN || winner === COM_WIN) {
+    whoGotScore(winner);
+    alert(
+      `The winner is ${capitalize(winner)}.\
+      Score: hum: ${humanScore} vs com: ${computerScore}`
+    );
+  };
+  if (humanScore === WIN_SCORE || computerScore === WIN_SCORE) {
+    const finalWinner = gameOver(computerScore, humanScore);
+    const para = document.createElement("p");
+    para.textContent = `Final winner is ${capitalize(finalWinner)}`;
+    resultDiv.appendChild(para);
+    
+    const removes = document.querySelector(".btns")
+    removes.remove()
+    
 
-playGame(5)
+  };
+});
