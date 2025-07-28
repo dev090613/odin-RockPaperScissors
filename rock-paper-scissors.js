@@ -122,18 +122,22 @@ btns.addEventListener("click", (e) => {
   const winner = playRound(computerChoice, humanChoice);
 
   if (winner === DRAW) {
-    alert(
-      `DRAW!!
-      human: ${humanChoice}, computer: ${computerChoice}
-      Score: ${humanScore} vs ${computerScore}`
-    );
+    const para = document.createElement("p");
+    para.innerHTML = 
+      `DRAW!!<br>
+      human: ${humanChoice}, computer: ${computerChoice}<br>
+      Score: ${capitalize(humanChoice)} vs ${capitalize(computerScore)}`;
+    resultDiv.appendChild(para)
+    // alert(
+    // );
   } else if (winner === HUMAN_WIN || winner === COM_WIN) {
     whoGotScore(winner);
-    alert(
-      `The winner is ${capitalize(winner)}.
-      human: ${humanChoice}, computer: ${computerChoice}
-      Score: ${humanScore} vs ${computerScore}`
-    );
+    const para = document.createElement("p");
+    para.innerHTML = 
+      `The winner is ${capitalize(winner)}.<br>
+      human: ${capitalize(humanChoice)}, computer: ${capitalize(computerChoice)}<br>
+      Score: ${humanScore} vs ${computerScore}`;
+    resultDiv.appendChild(para);
   };
 
   if (humanScore === WIN_SCORE || computerScore === WIN_SCORE) {
