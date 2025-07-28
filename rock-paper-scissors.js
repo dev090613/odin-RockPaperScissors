@@ -2,6 +2,9 @@ const HUMAN_WIN = "human";
 const COM_WIN = "computer";
 const DRAW = "draw";
 const WIN_SCORE = 3;
+const enToKo = {
+  "rock": "바위 🪨", "paper": "보 📜", "scissors": "가위 ✂️",
+}
 
 let humanScore = 0;
 let computerScore = 0;
@@ -125,8 +128,8 @@ btns.addEventListener("click", (e) => {
     const para = document.createElement("p");
     para.innerHTML = 
       `DRAW!!<br>
-      human: ${humanChoice}, computer: ${computerChoice}<br>
-      Score: ${capitalize(humanChoice)} vs ${capitalize(computerScore)}`;
+      Human: ${enToKo[humanChoice]}, Computer: ${enToKo[computerChoice]}<br>
+      Score: ${humanScore} vs ${computerScore}`;
     resultDiv.appendChild(para)
     // alert(
     // );
@@ -134,8 +137,8 @@ btns.addEventListener("click", (e) => {
     whoGotScore(winner);
     const para = document.createElement("p");
     para.innerHTML = 
-      `The winner is ${capitalize(winner)}.<br>
-      human: ${capitalize(humanChoice)}, computer: ${capitalize(computerChoice)}<br>
+      `The winner is ${capitalize(winner)}!!<br>
+      Human: ${enToKo[humanChoice]}, Computer: ${enToKo[computerChoice]}<br>
       Score: ${humanScore} vs ${computerScore}`;
     resultDiv.appendChild(para);
   };
